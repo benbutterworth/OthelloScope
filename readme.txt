@@ -1,0 +1,1 @@
+OthelloScope: generate and parse Othello/Reversi game records for analysis.

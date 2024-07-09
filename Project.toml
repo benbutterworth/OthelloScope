@@ -1,0 +1,4 @@
+name = "OthelloScope"
+uuid = "a155d3fe-6e2b-4944-831e-ded63aca540c"
+authors = ["benbutterworth <127899580+benbutterworth@users.noreply.github.com>"]
+version = "0.1.0"
