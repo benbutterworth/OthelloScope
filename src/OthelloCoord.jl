@@ -36,11 +36,12 @@ end
 
 """
     OthelloCoord()
-A struct representing a position on an othello board, using standard notation.
+A struct representing a position on an Othello board, using standard notation.
 """
 struct OthelloCoord
     col::Char
     row::Integer
+
     function OthelloCoord(st::String)
         if !isValidBoardReference(st)
             msg = "Invalid OthelloCoord: must take form \"cI\" w. c∈'a':'h', I∈1:8 ."
@@ -53,8 +54,8 @@ struct OthelloCoord
 end
 
 """
-    matrix_index_to_othello_coord(row::Int, col::Int)
-
+    matrix_index_to_othello_coord(row::Int, col::Int) -> OthelloCoord
+Return the OthelloCoord of a matrix indexed `(row, col)`.
 """
 function matrix_index_to_othello_coord(row::Int, col::Int)
     # convert matrix indexing to board coordinate
@@ -67,8 +68,8 @@ function matrix_index_to_othello_coord(row::Int, col::Int)
 end
 
 """
-    othello_coord_to_matrix_index(oc::OthelloCoord)
-
+    othello_coord_to_matrix_index(oc::OthelloCoord) -> Tuple{Int, Int}
+Return the matrix indices of a OthelloCoord.
 """
 function othello_coord_to_matrix_index(oc::OthelloCoord)
     row = oc.row
@@ -78,8 +79,8 @@ end
 
 """
     OthelloCoord(row::Int, col::Int)
-
-    """
+Create an OthelloCoord based on matrix indices `(row, col)`.
+"""
 function OthelloCoord(row::Int, col::Int)
     matrix_index_to_othello_coord(row,col)
 end
