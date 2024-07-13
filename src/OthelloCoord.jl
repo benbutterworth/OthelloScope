@@ -63,8 +63,9 @@ function matrix_index_to_othello_coord(row::Int, col::Int)
     if !isOnBoard
         throw(BoundsError("Coordinate out of board bounds."))
     end
-    coord = ('`' + col, row)
-    OthelloCoord(coord...)
+    coord = Char(96 + col) * Char( 48 + row) # a...h & 1...8
+    @info coord
+    OthelloCoord(coord)
 end
 
 """
