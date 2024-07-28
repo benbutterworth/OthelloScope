@@ -3,7 +3,7 @@ function int2piece(number::Integer)
         return ' '
     elseif number == 1
         return '⚪'
-    elseif number == 2
+    elseif number == -1
         return '⚫'
     else
         return Nothing

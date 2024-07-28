@@ -11,7 +11,7 @@ function isValidBoard(board)
         return false
     end
 
-    isInRange(n) = 0 ≤ n ≤ 2
+    isInRange(n) = -1 ≤ n ≤ 2
 
     if !(all(isInRange, board))
         return false

@@ -8,7 +8,7 @@ const examplerecord = "d3c5e6f3d6c6e3f5f4f7f6g5c4e2g3c2c3d2g4h3f2b5b4b3c1h4e7f1a
     obj2 = fill(' ', 8, 8)
     obj3 = fill(0, 8, 8)
     obj4::Matrix{Int8} = fill(3, 8, 9)
-    obj4::Matrix{Int8} = rand(0:2, 8, 8)
+    obj4::Matrix{Int8} = rand(-1:1, 8, 8)
 
     @test !isValidBoard(obj1) # Not Matrix
     @test !isValidBoard(obj2) # Not parametric Matrix{Int8}
