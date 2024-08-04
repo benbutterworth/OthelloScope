@@ -1,3 +1,4 @@
+export Board
 
 abstract type AbstractBoard end
 
@@ -8,14 +9,6 @@ Struct representing the state of an Othello board.
 struct Board <: AbstractBoard
     state::Matrix{Int8} # 1 = Black, 0 = empty, -1 = White
     pieces::Tuple{Char,Char,Char} #character repr. of Black, White, Empty.
-
-    function Board(board::Matrix{Int8}, pieces=('⚫', '⚪', ' '))
-        if !isValidBoard(board)
-            @error "Not a board."
-        end
-
-        new(board, pieces)
-    end
 end
 
 function setupboard()
@@ -24,9 +17,17 @@ function setupboard()
     board
 end
 
-function Board()
+function Board(pieces=('⚫', '⚪', ' '))
     emptyboard = setupboard()
-    Board(emptyboard)
+    Board(emptyboard, pieces)
+end
+
+function Board(board::Matrix{Int8}, pieces=('⚫', '⚪', ' '))
+    if !isValidBoard(board)
+        @error "Not a board."
+    end
+
+    Board(board, pieces)
 end
 
 import Base: show
@@ -48,5 +49,6 @@ function show(io::IO, board::Board)
         @error "not a valid piece!"
     end
     
-    OthelloScope.print_ascii_table(io::IO, boardaschars)
+    output = OthelloScope.generate_table(boardaschars)
+    print(io, output)
 end
