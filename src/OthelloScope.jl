@@ -1,8 +1,9 @@
 module OthelloScope
 
-include("isValidBoard.jl")
-include("boardtostring.jl")
-include("Board.jl")
+include("Board/isValidBoard.jl")
+include("Board/boardtostring.jl")
+include("Board/Board.jl")
+include("record2coords.jl")
 
 # example record: Jacob vs Ben 4 July 2024 d3c5e6f3d6c6e3f5f4f7f6g5c4e2g3c2c3d2g4h3f2b5b4b3c1h4e7f1a4b6h6h5h2d1g6a3a5a6c7c8e8d7e1g8d8b1b8g7h7h8a7h1a2f8b2a8b7a1g2g1
 
