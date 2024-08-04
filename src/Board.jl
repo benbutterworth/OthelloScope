@@ -29,7 +29,7 @@ function Board()
     Board(emptyboard)
 end
 
-using Base: show
+import Base: show
 
 function show(io::IO, board::Board)
     boardaschars = map(board) do piece
