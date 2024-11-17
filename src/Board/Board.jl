@@ -38,6 +38,12 @@ Othello boards without rigid boundaries that lets play happen on arbitrarily con
 """
 abstract type TopologicalBoard <: AbstractBoard end
 
+"""
+DimensionalBoard <: AbstractBoard
+
+Othello boards in more than 2 dimensions.
+"""
+abstract type DimensionalBoard <: AbstractBoard end
 
 """
     Board <: BoundedBoard
