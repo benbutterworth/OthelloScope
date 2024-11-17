@@ -17,6 +17,28 @@ function setupboard()
     board
 end
 
+"""
+    isValidBoard(board)
+Return `true` only if `board` can be interpreted as an Othello board.
+"""
+function isValidBoard(board)
+    if !(board isa Matrix{Int8})
+        return false
+    end
+
+    if size(board) != (8, 8)
+        return false
+    end
+
+    isInRange(n) = -1 ≤ n ≤ 2
+
+    if !(all(isInRange, board))
+        return false
+    end
+
+    return true
+end
+
 function Board(pieces=('⚫', '⚪', ' '))
     emptyboard = setupboard()
     Board(emptyboard, pieces)
@@ -31,7 +53,6 @@ function Board(board::Matrix{Int8}, pieces=('⚫', '⚪', ' '))
 end
 
 import Base: show
-
 function show(io::IO, board::Board)
     boardaschars = map(board) do piece
         if piece == 0
@@ -44,11 +65,9 @@ function show(io::IO, board::Board)
             return Nothing
         end
     end
-
     if any(isnothing, boardaschars)
         @error "not a valid piece!"
     end
-    
     output = OthelloScope.generate_table(boardaschars)
     print(io, output)
 end
