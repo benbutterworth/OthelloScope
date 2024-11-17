@@ -1,6 +1,5 @@
 module OthelloScope
 
-include("Board/isValidBoard.jl")
 include("Board/boardtostring.jl")
 include("Board/Board.jl")
 include("record2coords.jl")
