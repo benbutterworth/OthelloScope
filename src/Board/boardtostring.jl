@@ -108,3 +108,18 @@ function generate_table(tableinput::Matrix)
 
     tableoutput
 end
+
+"""
+    print_board(array::AbstractArray)
+"""
+function print_board(array::AbstractArray)
+    @assert length(size(array)) == 2
+    cols, rows = size(array)
+    println(" ", join(collect(1:cols)))
+    for row in 1:rows
+        println(row)
+        for col in 1:cols
+            print(array[row,col])
+        end
+    end 
+end
