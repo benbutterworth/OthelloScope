@@ -102,6 +102,8 @@ function show(io::IO, board::ClassicBoard)
     print_board(io, board.state)
 end
 
+# add indexing to ClassicBoard so elements can be accessed like Matrix!
+
 """
     Board <: BoundedBoard
 Struct representing the state of an Othello board.
@@ -148,26 +150,29 @@ function Board(board::Matrix{Int8}, pieces=('⚫', '⚪', ' '))
     if !isValidBoard(board)
         @error "Not a board."
     end
-
     Board(board, pieces)
 end
 
-import Base: show
+# import Base: show
+# function show(io::IO, board::Board)
+#     boardaschars = map(board) do piece
+#         if piece == 0
+#             return board.pieces[3]
+#         elseif piece == 1
+#             return board.pieces[1]
+#         elseif piece == -1
+#             return board.pieces[2]
+#         else
+#             return Nothing
+#         end
+#     end
+#     if any(isnothing, boardaschars)
+#         @error "not a valid piece!"
+#     end
+#     output = OthelloScope.generate_table(boardaschars)
+#     print(io, output)
+# end
+
 function show(io::IO, board::Board)
-    boardaschars = map(board) do piece
-        if piece == 0
-            return board.pieces[3]
-        elseif piece == 1
-            return board.pieces[1]
-        elseif piece == -1
-            return board.pieces[2]
-        else
-            return Nothing
-        end
-    end
-    if any(isnothing, boardaschars)
-        @error "not a valid piece!"
-    end
-    output = OthelloScope.generate_table(boardaschars)
-    print(io, output)
+    print_board(io, board.state)
 end
