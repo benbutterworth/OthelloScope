@@ -29,9 +29,13 @@ struct GameRecord
         if !occursin(gamerecordformat, moves)
             ArgumentError("`moves` not in recognised format")
         end
-        new(moves, players)
+        new(moves, boardtype, players)
     end
 end
+
+moves(gr::GameRecord) = gr.moves
+gametype(gr::GameRecord) = gr.gametype
+players(gr::GameRecord) = gr.players
 
 """
     extract_coordinates(record::GameRecord)
@@ -39,7 +43,7 @@ Extract coordinates of pieces placed in a game of Othello in a GameRecord.
 """
 function extract_coordinates(record::GameRecord)
     coords = Tuple{Int,Int}[]
-    stringrecord = record.moves
+    stringrecord = moves(record)
     for i in 1:2:length(stringrecord)
         col = Int(stringrecord[i]) - 96  #convert letter to number
         row = parse(Int64, stringrecord[i+1])
