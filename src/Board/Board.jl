@@ -45,22 +45,24 @@ Othello boards in more than 2 dimensions.
 """
 abstract type DimensionalBoard <: AbstractBoard end
 
-# flanking directions & increments for most boards
-const classicFlankingDirections = Dict(
-    :N=> (-1,0),
-    :NE => (-1,1),
-    :E => (0,1),
-    :SE => (1,1),
-    :S => (1,0),
-    :SW => (1,-1),
-    :W => (0,-1),
-    :NW => (-1,-1)
-)
-
+"""
+    ClassicBoard
+Your bog-standard, run-of-the-mill Othello Board. We're talking 2 dimensional, 
+8x8 grid with cardinal direction flanking for 2 players.
+"""
 mutable struct ClassicBoard <: SquareBoard
     state::Matrix{Int8}
 end
 
+function Base.getindex(board::AbstractBoard, i::Int, j::Int)
+    return state(board)[i,j]    
+end
+function Base.getindex(value, board::AbstractBoard, i::Int, j::Int)
+    state(board)[i,j] = value
+    return value
+end
+
+size(::ClassicBoard) = (8,8)
 state(board::ClassicBoard) = board.state
 flankingDirections(::ClassicBoard) = Dict(
     :N=> (-1,0),
@@ -72,14 +74,6 @@ flankingDirections(::ClassicBoard) = Dict(
     :W => (0,-1),
     :NW => (-1,-1)
 )
-
-"""
-    ClassicBoard
-
-Your bog-standard, run-of-the-mill Othello Board. We're talking 2 dimensional, 
-8x8 grid with cardinal direction flanking for 2 players.
-"""
-function ClassicBoard end
 
 function ClassicBoard()
     # initialise starting board w/o played moves.    
