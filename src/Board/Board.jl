@@ -17,7 +17,6 @@ Square playing boards for Othello.
 """
 abstract type SquareBoard <: BoundedBoard end
 
-
 """
 IrregularBoard <: BoundedBoard
 
@@ -60,9 +59,19 @@ const classicFlankingDirections = Dict(
 
 mutable struct ClassicBoard <: SquareBoard
     state::Matrix{Int8}
-    flankingDirections::Dict{Symbol, Tuple{Int8, Int8}}
-    # players::Tuple{Symbol, Symbol} # names & order of players? or should this be in gamerecord?
 end
+
+state(board::ClassicBoard) = board.state
+flankingDirections(::ClassicBoard) = Dict(
+    :N=> (-1,0),
+    :NE => (-1,1),
+    :E => (0,1),
+    :SE => (1,1),
+    :S => (1,0),
+    :SW => (1,-1),
+    :W => (0,-1),
+    :NW => (-1,-1)
+)
 
 """
     ClassicBoard
@@ -73,7 +82,7 @@ Your bog-standard, run-of-the-mill Othello Board. We're talking 2 dimensional,
 function ClassicBoard end
 
 function ClassicBoard()
-    # starting board, no moves.    
+    # initialise starting board w/o played moves.    
     state = zeros(Int8, 8, 8)
     for white in ((4,4), (5,5))
         state[white...] = -1
@@ -81,20 +90,21 @@ function ClassicBoard()
     for black in ((4,5), (5,4))
         state[black...] = 1
     end
-   return ClassicBoard(state, classicFlankingDirections)
+   return ClassicBoard(state)
 end
 
 function ClassicBoard(boardstate::Matrix)
+    # Initialise board from a matrix of piece positions
     if size(boardstate) != (8,8)
         throw(ArgumentError("Wrong size: given state is incompatible with ClassicBoard"))
     elseif !all(piece -> piece ∈ -1:1, board)
         throw(ArgumentError("Piece identifiers not recognised"))
     end
-    return ClassicBoard(boardstate, classicFlankingDirections)
+    return ClassicBoard(boardstate)
 end
 
-function ClassicBoard(gamerecord)
-    # start board in state
+function ClassicBoard(gamerecord::GameRecord)
+    # Initialise board from a game record of its moves.
     return Missing
 end
 
