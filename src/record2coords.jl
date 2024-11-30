@@ -1,39 +1,49 @@
 export record2coords
 
-const gamerecordformat::Regex = r"^([a-h][1-8])+$"
+gameRecordFormats = Dict{DataType, Regex}(
+    ClassicBoard => r"^([a-h][1-8])+$"
+)
 
 """
-    record2coords(gamerecord)
-Convert a record of moves in an Othello game to a Vector of matrix coordinates.
+    GameRecord(moves, boardtype, players)
+A game record describing the sequence of moves made in a game of Othello. 
 
-## Example
-```julia
-julia> gamerecord = "d3c5e6f3d6"
+    moves::String
+        Move coordinates in standard Othello notation a1b2c3...
 
-julia> record2coords(gamerecord)
-6-element Vector{Tuple{Int64, Int64}}:
- (3, 4)
- (5, 3)
- (6, 5)
- (3, 6)
- (6, 4)
- (6, 3)
-```
+    boardtype::DataType
+        What type of Othello game was played
+
+    players::Vector{String}
+        The names of the players in turn order
 """
-function record2coords(gamerecord)
-    @assert gamerecord isa String
-    @assert occursin(gamerecordformat, gamerecord)
-
-    coordinates = Tuple{Int64,Int64}[]
-
-    for i in 1:2:length(gamerecord)
-        boardpos = gamerecord[i:i+1]
-
-        col = Int(boardpos[1]) - 96
-        row = parse(Int64, boardpos[2])
-
-        push!(coordinates, (row, col))
+struct GameRecord 
+    moves::String
+    gametype::DataType
+    players::Tuple{String, String}
+    function GameRecord(moves::String, boardtype::DataType, players::Vector{String})
+        if !(boardtype isa Union{[T for T ∈ keys(gameRecordFormats)]...})
+            ArgumentError("gametype is not recognised")
+        end
+        gamerecordformat = gameRecordFormats[boardtype]
+        if !occursin(gamerecordformat, moves)
+            ArgumentError("`moves` not in recognised format")
+        end
+        new(moves, players)
     end
+end
 
-    return coordinates
+"""
+    extract_coordinates(record::GameRecord)
+Extract coordinates of pieces placed in a game of Othello in a GameRecord.
+"""
+function extract_coordinates(record::GameRecord)
+    coords = Tuple{Int,Int}[]
+    stringrecord = record.moves
+    for i in 1:2:length(stringrecord)
+        col = Int(stringrecord[i]) - 96  #convert letter to number
+        row = parse(Int64, stringrecord[i+1])
+        push!(coords, (row, col))
+    end
+    return coords
 end
