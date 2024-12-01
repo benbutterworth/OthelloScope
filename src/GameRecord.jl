@@ -43,10 +43,10 @@ Extract coordinates of pieces placed in a game of Othello in a GameRecord.
 """
 function extract_coordinates(record::GameRecord)
     coords = Tuple{Int,Int}[]
-    stringrecord = moves(record)
-    for i in 1:2:length(stringrecord)
-        col = Int(stringrecord[i]) - 96  #convert letter to number
-        row = parse(Int64, stringrecord[i+1])
+    moves = moves(record)
+    for i in 1:2:length(moves)
+        col = Int(moves[i]) - 96  #convert letter to number
+        row = parse(Int64, moves[i+1])
         push!(coords, (row, col))
     end
     return coords
