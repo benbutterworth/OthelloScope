@@ -19,6 +19,7 @@ flankingDirections(::ClassicBoard) = Dict(
     :W => (0,-1),
     :NW => (-1,-1)
 )
+game_record_format(::ClassicBoard) = r"^([a-h][1-8])+$"
 
 function ClassicBoard()
     # initialise starting board w/o played moves.    

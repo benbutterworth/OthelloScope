@@ -1,8 +1,5 @@
 export record2coords
-
-gameRecordFormats = Dict{DataType, Regex}(
-    ClassicBoard => r"^([a-h][1-8])+$"
-)
+export GameRecord
 
 """
     GameRecord(moves, boardtype, players)
@@ -22,10 +19,11 @@ struct GameRecord
     gametype::DataType
     players::Tuple{String, String}
     function GameRecord(moves::String, boardtype::DataType, players::Vector{String})
-        if !(boardtype isa Union{[T for T ∈ keys(gameRecordFormats)]...})
+        try
+            gamerecordformat = game_record_format(boardtype)
+        catch e
             ArgumentError("gametype is not recognised")
         end
-        gamerecordformat = gameRecordFormats[boardtype]
         if !occursin(gamerecordformat, moves)
             ArgumentError("`moves` not in recognised format")
         end
