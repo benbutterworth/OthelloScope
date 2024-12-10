@@ -43,54 +43,38 @@ function centrality(grid::Matrix)
    return (0,0) 
 end
 
+function get_slice_range(a::Int, b::Int; rows::Int=8, cols::Int=8)
+    # Get a slice of all the surrounding pieces of a certain point
+    rowRange = max(1, a-1):min(rows, a+1)
+    colRange = max(1, b-1):min(cols, b+1)
+    return rowRange, colRange
+end
+
 """
-    surroundedness(grid::matrix)
+    penetration(grid::matrix)
 
 Return the proportion of each colour's pieces are surrounded by majory opponent's pieces (not including empty space).
 """
-function surroundedness(grid::Matrix)
-    pieceCoords= get_piece_coordinates(grid)
-    isEdge(coord) = @. coord==1 || coord==8
-    
+function penetration(grid::Matrix)
+    boardstate= get_piece_coordinates(grid)
+    output = Float64[]
     # do this metric for both black and white
     for colour in [:black, :white]
-        colourCoords = pieceCoords[colour]
-        totalColour = length(colourCoords)
-        totalSurroundedBlack = 0
-        totalSurroundedWhite = 0
-        for coord in colourCoords
-            if !isEdge(coord)
-                slice = grid[
-                    coord[1]-1:coord[1]+1,
-                    coord[2]-1:coord[2]+1
-                ]
-                slice[2,2] = 0
-                
-                parity = sum(slice)
-                
-                if parity == 0
-                    continue 
-                elseif parity > 0
-                    totalSurroundedBlack += 1
-                elseif parity < 0
-                    totalSurroundedWhite += 1
-                end
-
-                # now we need some big boy calculation
-
-            else
-                @info "You need to code for edge conditions!"
+        pieceLocations = boardstate[colour]
+        nPieces = length(pieceLocations)
+        nSurrounded = 0
+        for coord in pieceLocations
+            slice = grid[get_slice_range(coord...)...]                
+            parity = sum(slice) - ifelse(colour==:black, 1, -1)
+            if parity<0 && colour==:black
+                nSurrounded += 1
+            elseif parity>0 && colour==:white    
+                nSurrounded += 1
             end
         end
+        push!(output, nSurrounded/nPieces)
     end
-    
-   # find position of each black piece
-   
-   # slice the neighbourhood around them
-   # perform sum to find majority surrounded
-   # add to black posession or white posession 
-   # weigh posession about
-   # do same for white 
+    return output
 end
 
 """
