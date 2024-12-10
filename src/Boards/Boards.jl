@@ -48,10 +48,10 @@ Othello boards in more than 2 dimensions.
 """
 abstract type DimensionalBoard <: AbstractBoard end
 
-function Base.getindex(board::AbstractBoard, i::Int, j::Int)
+function Base.getindex(board::BoundedBoard, i::Int, j::Int)
     return state(board)[i,j]    
 end
-function Base.getindex(value, board::AbstractBoard, i::Int, j::Int)
-    state(board)[i,j] = value
+function Base.setindex(value, board::BoundedBoard, i::Int, j::Int)
+    board[i,j] = value
     return value
 end
