@@ -37,10 +37,13 @@ end
 """
     centrality(grid::Matrix)
 
-Measure of how much control over the center area of played pieces (black/white) has. 
+Measure of how much control over the center area (black/white) has. 
 """
 function centrality(grid::Matrix)
-   return (0,0) 
+    # want super simple metric
+    slice = grid[4:5,4:5]
+    percBlack = sum(slice==1)/4
+    return (percBlack, 1-percBlack)
 end
 
 function get_slice_range(a::Int, b::Int; rows::Int=8, cols::Int=8)
