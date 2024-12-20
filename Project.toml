@@ -2,3 +2,13 @@ name = "OthelloScope"
 uuid = "a155d3fe-6e2b-4944-831e-ded63aca540c"
 authors = ["benbutterworth <127899580+benbutterworth@users.noreply.github.com>"]
 version = "0.1.0"
+
+[deps]
+AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
+Gumbo = "708ec375-b3d6-5a57-a7ce-8257bf98657a"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+
+[compat]
+AbstractTrees = "0.4.5"
+Gumbo = "0.8.2"
+HTTP = "1.10.15"
