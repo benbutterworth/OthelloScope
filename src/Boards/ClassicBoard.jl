@@ -43,9 +43,10 @@ flankingDirections(::ClassicBoard) = Dict(
 game_record_format(::ClassicBoard) = r"^([a-h][1-8])+$"
 
 Base.size(::ClassicBoard) = (8,8)
+Base.length(::ClassicBoard) = 64
 
 function Base.show(io::IO, board::ClassicBoard)
-    newstate = map(board) do piece
+    newstate = map(state(board)) do piece
         if piece == 0
             "-"
         elseif piece ==1
@@ -60,6 +61,8 @@ function Base.show(io::IO, board::ClassicBoard)
         for col in 1:8
             print(io, newstate[row,col])
         end
-        println(io)
+        if row<8
+            println(io)
+        end
     end 
 end
