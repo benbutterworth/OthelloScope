@@ -55,3 +55,13 @@ function Base.setindex(value, board::BoundedBoard, i::Int, j::Int)
     board[i,j] = value
     return value
 end
+
+function Base.iterate(board::BoundedBoard, index=1)
+    if index ≤ length(board)
+        j = 1 + ((index-1)÷8)
+        i = 1 + index - (1 + ((index-1)÷8)*8)
+        return board[i, j], index+1
+    else
+        return nothing
+    end
+end
