@@ -1,4 +1,3 @@
-export record2coords
 export GameRecord
 
 """
@@ -14,7 +13,7 @@ A game record describing the sequence of moves made in a game of Othello.
     players::Vector{String}
         The names of the players in turn order
 """
-struct GameRecord 
+struct GameRecord
     moves::String
     gametype::DataType
     players::Tuple{String, String}
@@ -36,16 +35,34 @@ gametype(gr::GameRecord) = gr.gametype
 players(gr::GameRecord) = gr.players
 
 """
-    extract_coordinates(record::GameRecord)
+    coords(record::GameRecord)
 Extract coordinates of pieces placed in a game of Othello in a GameRecord.
 """
-function extract_coordinates(record::GameRecord)
-    coords = Tuple{Int,Int}[]
+function coords(record::GameRecord)
+    coordinates = Tuple{Int,Int}[]
     moves = moves(record)
     for i in 1:2:length(moves)
         col = Int(moves[i]) - 96  #convert letter to number
         row = parse(Int64, moves[i+1])
-        push!(coords, (row, col))
+        push!(coordinates, (row, col))
     end
-    return coords
+    return coordinates
+end
+
+Base.length(record::GameRecord) = length(moves(record))÷2
+
+function Base.getindex(record::GameRecord, i::Int)
+    return coords(record)[i]    
+end
+function Base.setindex(value::Tuple{Int, Int}, record::GameRecord, i::Int)
+    record[i] = value
+    return value
+end
+
+function Base.iterate(record::GameRecord, index=1)
+	if index ≤ length(record)
+	    return record[index], index+1
+	else
+	    return nothing
+	end
 end
