@@ -1,8 +1,7 @@
 module OthelloScope
 
-include("Board/boardtostring.jl")
-include("Board/Board.jl")
-include("record2coords.jl")
+include("Boards/Boards.jl")
+include("GameRecord.jl")
 include("gamerules.jl")
 include("metrics.jl")
 
