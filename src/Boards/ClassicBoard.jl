@@ -7,7 +7,7 @@ mutable struct ClassicBoard <: SquareBoard
     state::Matrix{Int8}
 end
 
-size(::ClassicBoard) = (8,8)
+Base.size(::ClassicBoard) = (8,8)
 state(board::ClassicBoard) = board.state
 flankingDirections(::ClassicBoard) = Dict(
     :N=> (-1,0),
@@ -37,7 +37,7 @@ function ClassicBoard(boardstate::Matrix)
     # Initialise board from a matrix of piece positions
     if size(boardstate) != (8,8)
         throw(ArgumentError("Wrong size: given state is incompatible with ClassicBoard"))
-    elseif !all(piece -> piece ∈ -1:1, board)
+    elseif !all(piece -> piece ∈ -1:1, boardstate)
         throw(ArgumentError("Piece identifiers not recognised"))
     end
     return ClassicBoard(boardstate)
@@ -49,5 +49,22 @@ function ClassicBoard(gamerecord::GameRecord)
 end
 
 function Base.show(io::IO, board::ClassicBoard)
-    print_board(io, board.state)
+    newstate = map(board) do piece
+        if piece == 0
+            "-"
+        elseif piece ==1
+            "O"
+        elseif piece == -1
+            "X"
+        end
+    end 
+    cols, rows = size(newstate)
+    println(io, " ", join(collect(1:cols)))
+    for row in 1:rows
+        print(io, row)
+        for col in 1:cols
+            print(io, newstate[row,col])
+        end
+        println(io)
+    end 
 end
