@@ -7,20 +7,6 @@ mutable struct ClassicBoard <: SquareBoard
     state::Matrix{Int8}
 end
 
-Base.size(::ClassicBoard) = (8,8)
-state(board::ClassicBoard) = board.state
-flankingDirections(::ClassicBoard) = Dict(
-    :N=> (-1,0),
-    :NE => (-1,1),
-    :E => (0,1),
-    :SE => (1,1),
-    :S => (1,0),
-    :SW => (1,-1),
-    :W => (0,-1),
-    :NW => (-1,-1)
-)
-game_record_format(::ClassicBoard) = r"^([a-h][1-8])+$"
-
 function ClassicBoard()
     # initialise starting board w/o played moves.    
     state = zeros(Int8, 8, 8)
@@ -43,10 +29,20 @@ function ClassicBoard(boardstate::Matrix)
     return ClassicBoard(boardstate)
 end
 
-function ClassicBoard(gamerecord::GameRecord)
-    # Initialise board from a game record of its moves.
-    return Missing
-end
+state(board::ClassicBoard) = board.state
+flankingDirections(::ClassicBoard) = Dict(
+    :N=> (-1,0),
+    :NE => (-1,1),
+    :E => (0,1),
+    :SE => (1,1),
+    :S => (1,0),
+    :SW => (1,-1),
+    :W => (0,-1),
+    :NW => (-1,-1)
+)
+game_record_format(::ClassicBoard) = r"^([a-h][1-8])+$"
+
+Base.size(::ClassicBoard) = (8,8)
 
 function Base.show(io::IO, board::ClassicBoard)
     newstate = map(board) do piece
@@ -58,11 +54,10 @@ function Base.show(io::IO, board::ClassicBoard)
             "X"
         end
     end 
-    cols, rows = size(newstate)
-    println(io, " ", join(collect(1:cols)))
-    for row in 1:rows
+    println(io, " ", join(collect(1:8)))
+    for row in 1:8
         print(io, row)
-        for col in 1:cols
+        for col in 1:8
             print(io, newstate[row,col])
         end
         println(io)
