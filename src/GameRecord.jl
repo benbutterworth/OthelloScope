@@ -1,4 +1,4 @@
-export GameRecord
+export GameRecord, moves, gametype, players, coords
 
 """
     GameRecord(moves, boardtype, players)
@@ -17,16 +17,19 @@ struct GameRecord
     moves::String
     gametype::DataType
     players::Tuple{String, String}
-    function GameRecord(moves::String, boardtype::DataType, players::Vector{String})
+    function GameRecord(moves::String, boardtype::DataType, players)
+        gamerecordformat = nothing
         try
             gamerecordformat = game_record_format(boardtype)
         catch e
-            ArgumentError("gametype is not recognised")
+            throw(ArgumentError("gametype is not recognised"))
         end
         if !occursin(gamerecordformat, moves)
-            ArgumentError("`moves` not in recognised format")
+            throw(ArgumentError("`moves` not in recognised format"))
+        elseif !(typeof(players) <: Union{Tuple{String}, Vector{String}})
+            throw(ArgumentError("unrecognised player format"))
         end
-        new(moves, boardtype, players)
+        new(moves, boardtype, Tuple(players))
     end
 end
 
@@ -40,10 +43,10 @@ Extract coordinates of pieces placed in a game of Othello in a GameRecord.
 """
 function coords(record::GameRecord)
     coordinates = Tuple{Int,Int}[]
-    moves = moves(record)
-    for i in 1:2:length(moves)
-        col = Int(moves[i]) - 96  #convert letter to number
-        row = parse(Int64, moves[i+1])
+    mvs = moves(record)
+    for i in 1:2:length(mvs)
+        col = Int(mvs[i]) - 96  #convert letter to number
+        row = parse(Int64, mvs[i+1])
         push!(coordinates, (row, col))
     end
     return coordinates
