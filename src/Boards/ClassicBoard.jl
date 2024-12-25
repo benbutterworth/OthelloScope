@@ -1,3 +1,5 @@
+export ClassicBoard
+
 """
     ClassicBoard
 Your bog-standard, run-of-the-mill Othello Board. We're talking 2 dimensional, 
@@ -5,6 +7,21 @@ Your bog-standard, run-of-the-mill Othello Board. We're talking 2 dimensional,
 """
 mutable struct ClassicBoard <: SquareBoard
     state::Matrix{Int8}
+    function ClassicBoard(boardstate::Matrix)
+        if size(boardstate) != (8,8)
+            throw(ArgumentError("boardstate is not the correct size (8,8) for ClassicBoard"))
+        elseif eltype(boardstate) != Int8
+            try
+            	map(x->convert(Int8, x), boardstate)
+            catch e
+                throw(ArgumentError("cannot convert boardstate elements to Int8"))
+            end
+            boardstate = map(x->convert(Int8, x), boardstate)
+        elseif !all(piece -> piece ∈ -1:1, boardstate)
+            throw(ArgumentError("boardstate does not contain recognised piece identifiers"))
+        end
+        return new(boardstate)
+    end
 end
 
 function ClassicBoard()
@@ -19,16 +36,6 @@ function ClassicBoard()
    return ClassicBoard(state)
 end
 
-function ClassicBoard(boardstate::Matrix)
-    # Initialise board from a matrix of piece positions
-    if size(boardstate) != (8,8)
-        throw(ArgumentError("Wrong size: given state is incompatible with ClassicBoard"))
-    elseif !all(piece -> piece ∈ -1:1, boardstate)
-        throw(ArgumentError("Piece identifiers not recognised"))
-    end
-    return ClassicBoard(boardstate)
-end
-
 state(board::ClassicBoard) = board.state
 flankingDirections(::ClassicBoard) = Dict(
     :N=> (-1,0),
@@ -40,7 +47,7 @@ flankingDirections(::ClassicBoard) = Dict(
     :W => (0,-1),
     :NW => (-1,-1)
 )
-game_record_format(::ClassicBoard) = r"^([a-h][1-8])+$"
+game_record_format(::Type{ClassicBoard}) = r"^([a-h][1-8])+$"
 
 Base.size(::ClassicBoard) = (8,8)
 Base.length(::ClassicBoard) = 64
