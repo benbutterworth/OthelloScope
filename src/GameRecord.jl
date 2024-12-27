@@ -26,11 +26,15 @@ struct GameRecord
         end
         if !occursin(gamerecordformat, moves)
             throw(ArgumentError("`moves` not in recognised format"))
-        elseif !(typeof(players) <: Union{Tuple{String}, Vector{String}})
+        elseif !(typeof(players) != Union{Tuple{String}, Vector{String}})
             throw(ArgumentError("unrecognised player format"))
         end
         new(moves, boardtype, Tuple(players))
     end
+end
+
+function GameRecord(moves::String, boardtype::DataType)
+    GameRecord(moves, boardtype, ("P1", "P2"))
 end
 
 moves(gr::GameRecord) = gr.moves
@@ -51,6 +55,12 @@ function coords(record::GameRecord)
     end
     return coordinates
 end
+
+function bootstrap(gr::GameRecord)
+	m, gt, p = moves(gr), gametype(gr), players(gr)
+	newmoves = m[1:rand(2:2:length(m))]
+	return GameRecord(newmoves, gt, p)
+end 
 
 Base.length(record::GameRecord) = length(moves(record))÷2
 
