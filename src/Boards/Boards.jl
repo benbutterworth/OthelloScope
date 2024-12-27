@@ -11,6 +11,16 @@ Bounded Board <: AbstractBoard
 An Othello board with rigid play boundaries which moves do not wrap around.
 """
 abstract type BoundedBoard <: AbstractBoard end
+flanking_directions(::BoundedBoard) = Dict(
+     :N=> (-1,0),
+     :NE => (-1,1),
+     :E => (0,1),
+     :SE => (1,1),
+     :S => (1,0),
+     :SW => (1,-1),
+     :W => (0,-1),
+     :NW => (-1,-1)
+)
 
 """
 SquareBoard <: BoundedBoard
@@ -51,8 +61,11 @@ abstract type DimensionalBoard <: AbstractBoard end
 function Base.getindex(board::BoundedBoard, i::Int, j::Int)
     return state(board)[i,j]    
 end
-function Base.setindex(value, board::BoundedBoard, i::Int, j::Int)
-    board[i,j] = value
+function Base.getindex(board::BoundedBoard, coord::CartesianIndex)
+    return board[Tuple(coord)...]    
+end
+function Base.setindex!(board::BoundedBoard, value::Int, i::Int, j::Int)
+    state(board)[i,j] = value
     return value
 end
 
@@ -64,4 +77,8 @@ function Base.iterate(board::BoundedBoard, index=1)
     else
         return nothing
     end
+end
+
+function Base.CartesianIndices(board::BoundedBoard)
+	CartesianIndices(state(board))
 end

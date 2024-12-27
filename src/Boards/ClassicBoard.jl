@@ -1,4 +1,4 @@
-export ClassicBoard
+export ClassicBoard, state
 
 """
     ClassicBoard
@@ -37,16 +37,6 @@ function ClassicBoard()
 end
 
 state(board::ClassicBoard) = board.state
-flankingDirections(::ClassicBoard) = Dict(
-    :N=> (-1,0),
-    :NE => (-1,1),
-    :E => (0,1),
-    :SE => (1,1),
-    :S => (1,0),
-    :SW => (1,-1),
-    :W => (0,-1),
-    :NW => (-1,-1)
-)
 game_record_format(::Type{ClassicBoard}) = r"^([a-h][1-8])+$"
 
 Base.size(::ClassicBoard) = (8,8)
