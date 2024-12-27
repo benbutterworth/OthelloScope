@@ -70,22 +70,6 @@ function flip_pieces!(board::AbstractBoard, positions::CartesianIndices)
    end
 end
 
-# this function is gonna be so damn inefficient but fuck it, it'll work
-function find_legal_moves(board::AbstractBoard, colour::Int)
-   legal_moves = Tuple{Int, Int}[]
-   for pos in CartesianIndices(board)
-      tpos = Tuple(pos)
-      if board[tpos...] != 0
-         continue
-      end
-      flippedPieces = identify_flipped_pieces(board, Tuple(pos), colour)
-      if length(flippedPieces)!=0
-         push!(legal_moves, tpos)
-      end
-   end
-   legal_moves
-end
-
 function identify_flipped_pieces(board::AbstractBoard, position::Tuple{Int, Int}, colour::Int)
    othercolour = -1*colour
    flankingTargets = get_flanking_targets(board, position)
@@ -116,4 +100,44 @@ function identify_flipped_pieces(board::AbstractBoard, position::Tuple{Int, Int}
       end
    end
    return flippedPieces
+end
+
+# this function is gonna be so damn inefficient but fuck it, it'll work
+function find_legal_moves(board::AbstractBoard, colour::Int)
+   legal_moves = Tuple{Int, Int}[]
+   for pos in CartesianIndices(board)
+      tpos = Tuple(pos)
+      if board[tpos...] != 0
+         continue
+      end
+      flippedPieces = identify_flipped_pieces(board, tpos, colour)
+      if length(flippedPieces)!=0
+         push!(legal_moves, tpos)
+      end
+   end
+   legal_moves
+end
+
+function play!(board::AbstractBoard, position::Tuple{Int, Int}, colour::Int)
+   # check it's a legal move
+   if !(position ∈ find_legal_moves(board, colour))
+      @error "Piece cannot be played at $position as it is an illegal move."
+   end
+   # find what flanks it
+   board[position...] = colour
+   flip_pieces!(board, identify_flipped_pieces(board, position, colour))
+   board
+end
+
+function play(gamerecord::GameRecord)
+   board = ClassicBoard()
+   colour = 1 #starts black
+   for move in coords(gamerecord)
+      if length(identify_flipped_pieces(board, move, colour)) == 0
+         colour *= -1
+      end
+      play!(board, move, colour)
+      colour *= -1
+   end
+   board
 end
