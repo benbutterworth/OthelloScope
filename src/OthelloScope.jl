@@ -1,5 +1,7 @@
 module OthelloScope
 
+using DataFrames
+
 include("Boards/Boards.jl")
 include("GameRecord.jl")
 include("gamerules.jl")

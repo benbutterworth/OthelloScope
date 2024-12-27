@@ -1,3 +1,18 @@
+function metrics(board::AbstractBoard)
+    DataFrame(
+        "colour" => ["black", "white"],
+        "parity" => parity(state(board)),
+        "edge_control" => edgeDominance(state(board)),
+        "centrality" => centrality(state(board)),
+        "penetration" => penetration(state(board))
+    )
+end
+
+function metrics(gamerecord::GameRecord)
+    board = play(gamerecord)
+    metrics(board)
+end
+
 """
     parity(grid::Matrix)
 
@@ -7,7 +22,7 @@ function parity(grid::Matrix)
     totalPieces = sum(x->x!=0, grid)
     totalBlack = sum(x->x==1, grid)
     blackParity = totalBlack/totalPieces
-    return blackParity, 1-blackParity
+    return [blackParity, 1-blackParity]
 end
 
 """
@@ -26,11 +41,11 @@ function edgeDominance(grid::Matrix)
     edgePieces = [grid[coord...] for coord in edgeCoords]
     totalPieces = sum(x->x!=0, edgePieces)
     if totalPieces == 0
-        return 0,0
+        return [0,0]
     else
         totalBlack = sum(x->x==-1, edgePieces)
         blackParity = totalBlack/totalPieces
-        return blackParity, 1-blackParity
+        return [blackParity, 1-blackParity]
     end
 end
 
@@ -43,14 +58,14 @@ function centrality(grid::Matrix)
     # want super simple metric
     slice = grid[4:5,4:5]
     percBlack = sum(slice==1)/4
-    return (percBlack, 1-percBlack)
+    return [percBlack, 1-percBlack]
 end
 
 function get_slice_range(a::Int, b::Int; rows::Int=8, cols::Int=8)
     # Get a slice of all the surrounding pieces of a certain point
     rowRange = max(1, a-1):min(rows, a+1)
     colRange = max(1, b-1):min(cols, b+1)
-    return rowRange, colRange
+    return [rowRange, colRange]
 end
 
 """
