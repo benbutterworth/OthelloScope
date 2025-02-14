@@ -2,10 +2,10 @@ module OthelloScope
 
 using DataFrames
 
-include("Boards/Boards.jl")
-include("GameRecord.jl")
-include("gamerules.jl")
-include("metrics.jl")
+include("gameengine/Boards/Boards.jl")
+include("analysis/GameRecord.jl")
+include("gameengine/gamerules.jl")
+include("analysis/metrics.jl")
 
 # example record: Jacob vs Ben 4 July 2024 d3c5e6f3d6c6e3f5f4f7f6g5c4e2g3c2c3d2g4h3f2b5b4b3c1h4e7f1a4b6h6h5h2d1g6a3a5a6c7c8e8d7e1g8d8b1b8g7h7h8a7h1a2f8b2a8b7a1g2g1
 
