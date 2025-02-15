@@ -1,10 +1,13 @@
 function metrics(board::AbstractBoard)
+    nturns = sum(i->!(i∈(-1,1,8)), state(board)) - 4
+    nturns = 64-(sum(i->!(i∈(-1,1,8)), state(board)) - 4)
     DataFrame(
         "colour" => ["black", "white"],
+        "n_turns" => nturns, 
         "parity" => parity(state(board)),
         "edge_control" => edgeDominance(state(board)),
         "centrality" => centrality(state(board)),
-        "penetration" => penetration(state(board))
+        "infiltration" => infiltration(state(board))
     )
 end
 
@@ -57,7 +60,7 @@ Measure of how much control over the center area (black/white) has.
 function centrality(grid::Matrix)
     # want super simple metric
     slice = grid[4:5,4:5]
-    percBlack = sum(slice==1)/4
+    percBlack = sum(isone, slice)/4
     return [percBlack, 1-percBlack]
 end
 
@@ -69,11 +72,11 @@ function get_slice_range(a::Int, b::Int; rows::Int=8, cols::Int=8)
 end
 
 """
-    penetration(grid::matrix)
+    infiltration(grid::matrix)
 
 Return the proportion of each colour's pieces are surrounded by majory opponent's pieces (not including empty space).
 """
-function penetration(grid::Matrix)
+function infiltration(grid::Matrix)
     boardstate= get_piece_coordinates(grid)
     output = Float64[]
     # do this metric for both black and white
